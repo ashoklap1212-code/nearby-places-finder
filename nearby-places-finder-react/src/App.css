@@ -1,0 +1,108 @@
+.app {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #f5f7fb;
+}
+
+.app h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.controls {
+    max-width: 1100px;
+    margin: 0 auto 20px auto;
+}
+
+.location-btn {
+    display: block;
+    margin: 0 auto 15px auto;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.location-btn:hover {
+    opacity: 0.9;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.search-box button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #111827;
+    color: white;
+    cursor: pointer;
+}
+
+.categories {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.categories button {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.categories button:hover {
+    background: #e5e7eb;
+}
+
+.leaflet-container {
+    border-radius: 12px;
+    z-index: 1;
+}
+
+.places-list {
+    max-width: 1100px;
+    margin: 25px auto;
+}
+
+.places-list h2 {
+    margin-bottom: 15px;
+}
+
+.place-card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.place-card h3 {
+    margin: 0 0 5px 0;
+}
+
+.place-card p {
+    margin: 0;
+    color: #666;
+}
