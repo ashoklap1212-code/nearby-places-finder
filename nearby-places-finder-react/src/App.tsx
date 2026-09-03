@@ -68,69 +68,68 @@ function App() {
   // ==============================
   // SEARCH NEARBY CATEGORY
   // ==============================
+const searchNearbyPlaces = async (category: string) => {
+  if (!location) {
+    alert("First click My Location.");
+    return;
+  }
 
-  const searchNearbyPlaces = async (category: string) => {
-    if (!location) {
-      alert("First click My Location.");
-      return;
+  setLoading(true);
+  setPlaces([]);
+
+  try {
+    const response = await fetch(
+      `https://photon.komoot.io/api/?q=${encodeURIComponent(
+        category
+      )}&lat=${location.lat}&lon=${location.lng}&limit=10`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
     }
 
-    setLoading(true);
-    setPlaces([]);
+    const data = await response.json();
 
-    try {
-      // Approximate 2 km search area
-      const latOffset = 0.018;
-      const lonOffset = 0.018;
+    const results: Place[] = data.features
+      .map((feature: any, index: number) => {
+        const coordinates = feature.geometry?.coordinates;
 
-      const left = location.lng - lonOffset;
-      const right = location.lng + lonOffset;
-      const top = location.lat + latOffset;
-      const bottom = location.lat - latOffset;
+        if (!coordinates || coordinates.length < 2) {
+          return null;
+        }
 
-      const url =
-        `https://nominatim.openstreetmap.org/search?` +
-        `format=json` +
-        `&q=${encodeURIComponent(category)}` +
-        `&limit=10` +
-        `&bounded=1` +
-        `&viewbox=${left},${top},${right},${bottom}`;
+        const properties = feature.properties || {};
 
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      const results: Place[] = data
-        .map((item: any, index: number) => ({
+        return {
           id: index,
-          name: item.display_name
-            ? item.display_name.split(",")[0]
-            : "Unnamed Place",
-          lat: Number(item.lat),
-          lon: Number(item.lon),
-          address: item.display_name || "Address not available",
-        }))
-        .filter(
-          (place: Place) =>
-            !isNaN(place.lat) && !isNaN(place.lon)
-        );
+          name:
+            properties.name ||
+            `${category} place`,
+          lat: Number(coordinates[1]),
+          lon: Number(coordinates[0]),
+          address: [
+            properties.street,
+            properties.city,
+            properties.state,
+          ]
+            .filter(Boolean)
+            .join(", ") || "Address not available",
+        };
+      })
+      .filter(Boolean);
 
-      setPlaces(results);
+    setPlaces(results);
 
-      if (results.length === 0) {
-        alert(`No ${category} found nearby.`);
-      }
-    } catch (error) {
-      console.error("Nearby places error:", error);
-      alert("Unable to search places. Please try again after a few seconds.");
-    } finally {
-      setLoading(false);
+    if (results.length === 0) {
+      alert(`No ${category} found nearby.`);
     }
-  };
+  } catch (error) {
+    console.error("Nearby places error:", error);
+    alert("Unable to find places. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ==============================
   // CUSTOM SEARCH
